@@ -1,0 +1,118 @@
+<h1 class="page-title">SIPRI Arms Transfers <br/> visualizations <br /> </h1>
+<div class="top-summary">
+  <p>
+    The <a href="https://www.sipri.org/" target="_blank">Stockholm International Peace Research Institute (SIPRI)</a> is an independent organization that studies a wide range of topics related to war and peace, 
+    including arms transfers, military spending, arms control and disarmament, and peace and conflict studies. Founded in 1966, SIPRI is widely respected for 
+    its independent and impartial research, which is used by policymakers, academics, and the public around the world. SIPRI's research covers a wide range of topics, 
+    including <a href="https://www.sipri.org/databases" target="_blank">Arms transfers, Military expenditure, Arms control, and disarmament and  Peace and conflict studies </a>.
+    In this study we will be visualizing the first two topics through their data to understand international arms transfers and their implications for global security.
+
+  </p>
+  <p>The following set of visualizations utilize arms data derived from SIPRI, group together based on the
+    country, year and TIV values. The ensemble data depict arms  under two different scenarios, "imports" and "exports" using trend-indicator values (TIVs).</p>
+
+  <p> For more information about the data used in this analysis, please visit the
+    <a href="https://www.sipri.org/databases/armstransfers" target="_blank">SIPRI website</a>. Additionally, if you are interested in the code used to develop these visualizations, feel free to check it out on 
+    my <a href="https://github.com/sumn2u/sipri-visualization" target="_blank">Github</a>.</p>
+</div>
+<h2 class="section-title">Comparing two scenarios </h2>
+<p class="summary">
+ TIV of arms are differentiated based on the  imports and exports. Here, figures are expressed in millions and may not add up due to 
+ the conventions of rounding. A <strong class="highlight">0</strong> indicates the value of deliveries is less than <strong class="highlight">0.5m</strong>. 
+ Below map shows the TIV of arms <strong class="highlight">{{this.scenario}}</strong> between <strong class="highlight">{{this.lowerBoundYear}}</strong> - <strong class="highlight">{{this.upperBoundYear}}</strong>.
+</p>
+<div class="button-div">
+  <button *ngIf="!scenarioImport" mat-stroked-button color="warn" (click)="selectScenario('Imports')">Imports</button>
+  <button *ngIf="scenarioImport" mat-flat-button color="warn">Imports</button>
+  <button *ngIf="!scenarioExport" mat-stroked-button color="warn" (click)="selectScenario('Exports')">Exports</button>
+  <button *ngIf="scenarioExport" mat-flat-button color="warn">Exports</button>
+</div>
+
+
+<div *ngIf="scenarioImport" class="scenario-div">
+  <small class="scenario-description">
+    <p><strong class="highlight-scenario">Scenario Import</strong></p>
+    <ul class="conditions">
+      <li>- Reflects the military capability gained by the receiving country.</li>
+      <li>- Considers the type and condition of weapons received.</li>
+      <li>- Used to analyze trends in a country's military buildup and potential offensive/defensive capacity.</li>
+      <li>- More information about sourcing and methods can be found <a href="https://www.sipri.org/databases/armstransfers/sources-and-methods/" target="_blank">here</a></li>
+    </ul>
+  </small>
+</div>
+
+<div *ngIf="scenarioExport" class="scenario-div">
+  <small class="scenario-description">
+    <p><strong class="highlight-scenario">Scenario Export</strong></p>
+    <ul class="conditions">
+      <li>- Reflects the military capability released by the exporting country.</li>
+      <li>- Tracks the flow of weapons from major arms producers to different recipient countries.</li>
+      <li>- Used to assess the role of a country in the global arms trade and potential influence it exerts through such transfers.</li>
+      <li>- More information about sourcing and methods can be found <a href="https://www.sipri.org/databases/armstransfers/sources-and-methods/" target="_blank">here</a></li>
+    </ul>
+  </small>
+</div>
+
+<div id = 'title'>
+    <button *ngIf=!play (click)="playButton()" mat-mini-fab color="warn" id="play" aria-label="Example icon button with a menu icon">
+      <mat-icon>play_arrow</mat-icon>
+    </button>
+    <button *ngIf=refresh (click)="refreshButton()" mat-mini-fab color="warn" id="refresh" aria-label="Example icon button with a menu icon">
+      <mat-icon>refresh</mat-icon>
+    </button>
+
+  </div>
+
+<h2 class="title-tag">{{titleTag}}</h2>
+<mat-slider min={{lowerBoundYear}} max={{upperBoundYear}} step={{step}} value={{currentYear}} tickInterval={{tickInterval}} disabled="false"  color="warn" (input)="pitch($event)" ></mat-slider>
+<div class= "world-map"></div>
+
+<div class="top-ten">
+  <h2 class="section-title">Which types of arms are <br> being trade?</h2>
+  <p class="summary">Tracking of arms transfers and the types of arms being traded serves as a valuable resource 
+    for promoting transparency, accountability, and responsible arms trade practices at both national and international levels.
+    The information contributes to efforts aimed at preventing conflicts, promoting peace, and ensuring the responsible use of arms. 
+    Based on SIPRI data following arms being trade in between <strong class="highlight">{{this.lowerBoundYear}}</strong> - <strong class="highlight">{{this.upperBoundYear}}</strong>.</p>
+  <div class="bar-graphics">
+    <div class = "top10-b1" id="trade-info"></div>
+  </div>
+</div>
+
+<div class="top-ten">
+  <h2 class="section-title">Which regions are <br> spending more in military expenses?</h2>
+  <p class="summary"> 
+    Military expenses at the regional level can provide valuable insights into the expenditure patterns and priorities of a specific geographic area. 
+    Here we are going to explore the military expenses of each region from <strong class="highlight">{{this.lowerBoundYear}}</strong> to <strong class="highlight">{{this.upperBoundYear}}</strong>.
+    These expenses are measured in US dollars.
+  </p>
+  <div class="bar-graphics">
+    <div class = "top10-b1" id="regional-expenses"></div>
+  </div>
+</div>
+
+<div class="top-ten">
+  <h2 class="section-title">Global share of exports of major arms by the 10 largest exporters,<br> in {{this.upperBoundYear}}</h2>
+  <p class="summary"> </p>
+  <div class="bar-graphics">
+    <div class = "top10-b1" id="global-share"></div>
+  </div>
+</div>
+
+<div class="top-ten">
+  <h2 class="section-title">Global exports of major arms by the 10 largest exporters <br/> comparison from {{this.upperBoundYear -10 }} - {{this.upperBoundYear}}</h2>
+  <p class="summary"> The visualization of global arms exports by the 10 largest exporters from <strong class="highlight">{{this.upperBoundYear -10 }} - {{this.upperBoundYear}} </strong> 
+    provides a comprehensive overview of the evolving dynamics in the international arms trade. 
+    Here, the base reference is taken from the <strong class="highlight">{{this.upperBoundYear -5}} - {{this.upperBoundYear}}</strong> top 10 global arms export value.
+    </p>
+  <div class="bar-graphics">
+    <div class = "top10-b1" id="global-exports"></div>
+  </div>
+</div>
+
+<div class="top-summary">
+  <p>Leveraging the visualization of the SIPRI database, we've distilled complex military expenditure and arms trade data into insightful 
+    charts and graphics. These visuals empower stakeholders to easily grasp global trends, regional nuances, and shifts in military spending dynamics. 
+    By providing a clear and accessible representation of SIPRI data, our visualizations serve as a valuable tool for policymakers, researchers, and the public. 
+    Through these compelling visuals, we aim to promote transparency, facilitate informed decision-making, and spark meaningful conversations on international security and peace.
+  </p>
+</div>
